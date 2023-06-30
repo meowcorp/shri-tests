@@ -9,3 +9,16 @@ export const wrapWithProvider = (children: React.ReactChild) => {
 export const trimBaseUrl = (path: string) => {
   return path.replace(constants.BASE_URL, "");
 };
+
+export const wrapResponseData = <T>({
+  data,
+  status = 200,
+}: {
+  data: T;
+  status?: number;
+}) => {
+  return {
+    status,
+    data,
+  };
+};
