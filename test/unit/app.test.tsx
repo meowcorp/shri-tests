@@ -5,6 +5,9 @@ import userEvent from "@testing-library/user-event";
 import { Application } from "../../src/client/Application";
 import { trimBaseUrl, wrapWithProvider } from "./helpers/helpers";
 import constants from "./helpers/constants";
+import { Home } from "../../src/client/pages/Home";
+import { Delivery } from "../../src/client/pages/Delivery";
+import { Contacts } from "../../src/client/pages/Contacts";
 
 describe("Общие требования", () => {
   it("В шапке отображаются ссылки на страницы магазина, а также ссылка на корзину", async () => {
@@ -41,5 +44,25 @@ describe("Общие требования", () => {
     await waitFor(() => {
       expect(getByTestId("navbar")).toHaveClass("collapse");
     });
+  });
+});
+
+describe("Страницы главная, условия доставки, контакты должны иметь статическое содержимое", () => {
+  it("Страница главная имеет статическое содержимое", async () => {
+    const { asFragment } = render(wrapWithProvider(<Home />));
+
+    expect(asFragment()).toMatchSnapshot();
+  });
+
+  it("Страница условия доставки имеет статическое содержимое", async () => {
+    const { asFragment } = render(wrapWithProvider(<Delivery />));
+
+    expect(asFragment()).toMatchSnapshot();
+  });
+
+  it("Страница контакты имеет статическое содержимое", async () => {
+    const { asFragment } = render(wrapWithProvider(<Contacts />));
+
+    expect(asFragment()).toMatchSnapshot();
   });
 });
