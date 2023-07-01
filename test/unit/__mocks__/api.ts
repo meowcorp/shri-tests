@@ -1,5 +1,9 @@
 import { wrapResponseData } from "../helpers/helpers";
-import { DETAILS_PRODUCTS, MOCKED_CATALOG } from "./products";
+import {
+  DETAILS_PRODUCTS,
+  MOCKED_CATALOG,
+  CURRENT_CHECKOUT_ID,
+} from "./products";
 
 const findProduct = (id: number) =>
   DETAILS_PRODUCTS.find((product) => product.id === id) ?? null;
@@ -14,6 +18,11 @@ const ExampleApi = jest.fn().mockImplementation(() => {
         wrapResponseData({
           data: findProduct(id),
         })
+      ),
+    checkout: jest
+      .fn()
+      .mockResolvedValue(
+        wrapResponseData({ data: { id: CURRENT_CHECKOUT_ID } })
       ),
   };
 });

@@ -83,6 +83,7 @@ export const Application: FC = () => {
                 Contacts
               </NavLink>
               <NavLink
+                data-testid="cartLink"
                 className="nav-link"
                 activeClassName="active"
                 to="/cart"

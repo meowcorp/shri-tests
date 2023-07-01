@@ -26,3 +26,7 @@ export const wrapResponseData = <T>({
     data,
   };
 };
+
+export const getCartLabel = (quantity: number) => {
+  return quantity > 0 ? `Cart (${quantity})` : "Cart";
+};
