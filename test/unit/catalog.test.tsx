@@ -23,6 +23,10 @@ const mockSinglePreloadState = () => {
 };
 
 describe("Страница каталога", () => {
+  afterEach(() => {
+    window.localStorage.clear();
+  });
+
   it("В каталоге должны отображаться товары, которые приходят с сервера", async () => {
     const fakeStore = setupStore(new ExampleApi());
 
@@ -120,7 +124,8 @@ describe("Страница каталога", () => {
 
     const { findByTestId } = render(
       wrapWithNavigationProvider(
-        wrapWithStoreProvider(<Catalog />, { store: fakeStore })
+        wrapWithStoreProvider(<Application />, { store: fakeStore }),
+        { initialEntries: [`/catalog`] }
       )
     );
 
@@ -129,6 +134,8 @@ describe("Страница каталога", () => {
   });
 
   it("Если товар уже добавлен в корзину, на странице товара должно отображаться сообщение об этом", async () => {
+    const product = DETAILS_PRODUCTS[0];
+
     const fakeStore = setupStore(new ExampleApi(), undefined, {
       preloadedState: mockSinglePreloadState(),
     });
@@ -136,7 +143,7 @@ describe("Страница каталога", () => {
     const { findByTestId } = render(
       wrapWithNavigationProvider(
         wrapWithStoreProvider(<Application />, { store: fakeStore }),
-        { initialEntries: [`/catalog/${DETAILS_PRODUCTS[0].id}`] }
+        { initialEntries: [`/catalog/${product.id}`] }
       )
     );
 
@@ -165,5 +172,43 @@ describe("Страница каталога", () => {
     await buttonEvent.click(addToCartButton);
 
     expect(fakeStore.getState().cart[product.id].count).toEqual(2);
+  });
+});
+
+describe("Добавление в корзину (без очистки localStorage)", () => {
+  it("Товар добавляется в пустую корзину", async () => {
+    const buttonEvent = userEvent.setup();
+
+    const product = DETAILS_PRODUCTS[0];
+    const fakeStore = setupStore(new ExampleApi());
+
+    const { findByTestId } = render(
+      wrapWithNavigationProvider(
+        wrapWithStoreProvider(<Application />, { store: fakeStore }),
+        { initialEntries: [`/catalog/${product.id}`] }
+      )
+    );
+
+    expect(fakeStore.getState().cart).toStrictEqual({});
+
+    const addToCart = await findByTestId("addToCart");
+
+    await buttonEvent.click(addToCart);
+
+    expect(fakeStore.getState().cart).toStrictEqual(getCart([product]));
+  });
+
+  it("При перезагрузке корзина не очищается", async () => {
+    const product = DETAILS_PRODUCTS[0];
+    const fakeStore = setupStore(new ExampleApi());
+
+    render(
+      wrapWithNavigationProvider(
+        wrapWithStoreProvider(<Application />, { store: fakeStore }),
+        { initialEntries: [`/catalog/${product.id}`] }
+      )
+    );
+
+    expect(fakeStore.getState().cart).toStrictEqual(getCart([product]));
   });
 });

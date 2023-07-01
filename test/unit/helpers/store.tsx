@@ -70,12 +70,12 @@ export const getCart = (products: Product[], count = 1): CartState => {
 interface PreloadedStateProps {
   cart: ApplicationState["cart"];
   products?: ApplicationState["products"];
-  details: ApplicationState["details"];
+  details?: ApplicationState["details"];
 }
 export const getPreloadedState = ({
   products,
-  details,
-  cart,
+  details = {},
+  cart = {},
 }: PreloadedStateProps): ApplicationState => {
   return {
     products: products,
