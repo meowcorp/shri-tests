@@ -55,7 +55,7 @@ export const wrapWithStoreProvider = (
 };
 
 export const getCart = (products: Product[], count = 1): CartState => {
-  const cartObject = {};
+  const cartObject: Record<number, CartItem> = {};
   products.forEach((product) => {
     cartObject[product.id] = {
       name: product.name,

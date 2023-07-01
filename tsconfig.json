@@ -7,9 +7,10 @@
     "target": "es5",
     "allowJs": true,
     "jsx": "react",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "types": ["node", "jest"]
   },
-  "include": ["src", "./jest-setup.ts"],
+  "include": ["src", "test", "./jest-setup.ts"],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"
