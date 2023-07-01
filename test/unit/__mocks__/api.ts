@@ -1,4 +1,5 @@
 import { wrapResponseData } from "../helpers/helpers";
+import { getCart } from "../helpers/store";
 import {
   DETAILS_PRODUCTS,
   MOCKED_CATALOG,
@@ -27,4 +28,13 @@ const ExampleApi = jest.fn().mockImplementation(() => {
   };
 });
 
-export { ExampleApi };
+const CartApi = jest.fn().mockImplementation((initObject) => {
+  let object = initObject || {};
+
+  return {
+    getState: jest.fn(() => object),
+    setState: jest.fn((cart) => (object = cart)),
+  };
+});
+
+export { ExampleApi, CartApi };
