@@ -7,7 +7,8 @@ import {
 import React from "react";
 import { render, waitFor, screen } from "@testing-library/react";
 import { Catalog } from "../../src/client/pages/Catalog";
-import { ExampleApi, MOCKED_PRODUCT, MOCKED_PRODUCTS } from "./__mocks__/api";
+import { ExampleApi } from "./__mocks__/api";
+import { DETAILS_PRODUCTS, MOCKED_CATALOG } from "./__mocks__/products";
 import { wrapWithNavigationProvider } from "./helpers/navigation";
 import { formatPrice, trimBaseUrl } from "./helpers/helpers";
 import { Application } from "../../src/client/Application";
@@ -15,9 +16,9 @@ import userEvent from "@testing-library/user-event";
 
 const mockSinglePreloadState = () => {
   return getPreloadedState({
-    products: MOCKED_PRODUCTS,
-    details: MOCKED_PRODUCT,
-    cart: getCart([MOCKED_PRODUCT]),
+    products: MOCKED_CATALOG,
+    details: DETAILS_PRODUCTS[0],
+    cart: getCart([DETAILS_PRODUCTS[0]]),
   });
 };
 
@@ -33,7 +34,9 @@ describe("Страница каталога", () => {
 
     const catalogItemsContainer = await getByTestId("catalog-items");
     await waitFor(() => {
-      expect(catalogItemsContainer.childElementCount).toBe(3);
+      expect(catalogItemsContainer.childElementCount).toBe(
+        MOCKED_CATALOG.length
+      );
     });
   });
 
@@ -53,7 +56,7 @@ describe("Страница каталога", () => {
     Array.prototype.forEach.call(
       catalogItemsContainer.children,
       (cart: HTMLDivElement, i: number) => {
-        const product = MOCKED_PRODUCTS[i];
+        const product = MOCKED_CATALOG[i];
 
         const name = cart.querySelector(
           '[data-testid="name"]'
@@ -77,36 +80,37 @@ describe("Страница каталога", () => {
 
   it('На странице с подробной информацией отображаются: цена, описание, название товара, материал и кнопка "Добавить в корзину"', async () => {
     const fakeStore = setupStore(new ExampleApi());
+    const product = DETAILS_PRODUCTS[0];
 
     const { findByTestId } = render(
       wrapWithNavigationProvider(
         wrapWithStoreProvider(<Application />, { store: fakeStore }),
-        { initialEntries: ["/catalog/1"] }
+        { initialEntries: [`/catalog/${product.id}`] }
       )
     );
 
     const name = await findByTestId("name");
     expect(name).toBeVisible();
-    expect(name.textContent).toEqual(MOCKED_PRODUCT.name);
+    expect(name.textContent).toEqual(product.name);
 
     const description = await findByTestId("description");
     expect(description).toBeVisible();
-    expect(description.textContent).toEqual(MOCKED_PRODUCT.description);
+    expect(description.textContent).toEqual(product.description);
 
     const price = await findByTestId("price");
     expect(price).toBeVisible();
-    expect(price.textContent).toEqual(formatPrice(MOCKED_PRODUCT.price));
+    expect(price.textContent).toEqual(formatPrice(product.price));
 
     const addToCart = await findByTestId("price");
     expect(addToCart).toBeVisible();
 
     const color = await findByTestId("color");
     expect(color).toBeVisible();
-    expect(color.textContent).toEqual(MOCKED_PRODUCT.color);
+    expect(color.textContent).toEqual(product.color);
 
     const material = await findByTestId("material");
     expect(material).toBeVisible();
-    expect(material.textContent).toEqual(MOCKED_PRODUCT.material);
+    expect(material.textContent).toEqual(product.material);
   });
 
   it("Если товар уже добавлен в корзину, в каталоге должно отображаться сообщение об этом", async () => {
@@ -132,7 +136,7 @@ describe("Страница каталога", () => {
     const { findByTestId } = render(
       wrapWithNavigationProvider(
         wrapWithStoreProvider(<Application />, { store: fakeStore }),
-        { initialEntries: [`/catalog/${MOCKED_PRODUCT.id}`] }
+        { initialEntries: [`/catalog/${DETAILS_PRODUCTS[0].id}`] }
       )
     );
 
@@ -143,6 +147,8 @@ describe("Страница каталога", () => {
   it("Если товар есть в корзине, то добавление его в корзину увеличит количество", async () => {
     const buttonEvent = userEvent.setup();
 
+    const product = DETAILS_PRODUCTS[0];
+
     const fakeStore = setupStore(new ExampleApi(), undefined, {
       preloadedState: mockSinglePreloadState(),
     });
@@ -150,7 +156,7 @@ describe("Страница каталога", () => {
     const { findByTestId } = render(
       wrapWithNavigationProvider(
         wrapWithStoreProvider(<Application />, { store: fakeStore }),
-        { initialEntries: [`/catalog/${MOCKED_PRODUCT.id}`] }
+        { initialEntries: [`/catalog/${product.id}`] }
       )
     );
 
@@ -158,6 +164,6 @@ describe("Страница каталога", () => {
 
     await buttonEvent.click(addToCartButton);
 
-    expect(fakeStore.getState().cart[MOCKED_PRODUCT.id].count).toEqual(2);
+    expect(fakeStore.getState().cart[product.id].count).toEqual(2);
   });
 });
