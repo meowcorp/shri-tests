@@ -10,6 +10,10 @@ export const trimBaseUrl = (path: string) => {
   return path.replace(constants.BASE_URL, "");
 };
 
+export const formatPrice = (price: number) => {
+  return `\$${price}`;
+};
+
 export const wrapResponseData = <T>({
   data,
   status = 200,

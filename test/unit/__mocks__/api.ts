@@ -2,7 +2,7 @@ import { wrapResponseData } from "../helpers/helpers";
 
 const MOCKED_PRODUCTS = [
   { id: 0, name: "Handcrafted Pizza", price: 253 },
-  { id: 1, name: "Awesome Tuna", price: 694 },
+  { id: 1, name: "Fantastic Hat", price: 694 },
   { id: 2, name: "Generic Fish", price: 763 },
 ];
 
@@ -21,12 +21,11 @@ const ExampleApi = jest.fn().mockImplementation(() => {
     getProducts: jest
       .fn()
       .mockResolvedValue(wrapResponseData({ data: MOCKED_PRODUCTS })),
-    getProductById: (id: string) =>
-      jest.fn().mockResolvedValue(
-        wrapResponseData({
-          data: id === MOCKED_PRODUCT.id.toString() ? MOCKED_PRODUCTS : null,
-        })
-      ),
+    getProductById: jest.fn().mockResolvedValue(
+      wrapResponseData({
+        data: MOCKED_PRODUCT,
+      })
+    ),
   };
 });
 
