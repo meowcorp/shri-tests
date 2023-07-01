@@ -71,13 +71,16 @@ interface PreloadedStateProps {
   cart: ApplicationState["cart"];
   products?: ApplicationState["products"];
   details?: ApplicationState["details"];
+  latestOrderId?: ApplicationState["latestOrderId"];
 }
 export const getPreloadedState = ({
   products,
   details = {},
   cart = {},
+  latestOrderId,
 }: PreloadedStateProps): ApplicationState => {
   return {
+    latestOrderId,
     products: products,
     details: details,
     cart: cart,
