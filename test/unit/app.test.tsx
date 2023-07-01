@@ -1,6 +1,6 @@
 import React from "react";
 
-import { render, waitFor } from "@testing-library/react";
+import { render, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Application } from "../../src/client/Application";
 import { trimBaseUrl, wrapWithProvider } from "./helpers/helpers";
@@ -28,22 +28,21 @@ describe("Общие требования", () => {
     expect(trimBaseUrl(logoLink.href)).toBe("/");
   });
 
-  it.skip("Гамбургер открывается при нажатии на него и закрывается при выборе элемента", async () => {
-    // на перенос в гермиону
-
+  it("Гамбургер открывается при нажатии на него и закрывается при выборе элемента", async () => {
     const buttonEvent = userEvent.setup();
 
-    const { getByLabelText, getByTestId, getByRole } = render(
+    const { getByLabelText, getByTestId, getAllByRole, container } = render(
       wrapWithProvider(<Application />)
     );
 
     await buttonEvent.click(getByLabelText("Toggle navigation"));
-    expect(await getByTestId("navbar")).not.toHaveClass("collapse");
-    await buttonEvent.click(getByRole("link", { current: "page" }));
+    expect(getByTestId("navbar")).not.toHaveClass("collapse");
 
-    await waitFor(() => {
-      expect(getByTestId("navbar")).toHaveClass("collapse");
-    });
+    const navigationLinks = within(getByTestId("navbar")).getAllByRole("link");
+
+    // Открывает статичную страницу delivery, чтобы не задействовать API
+    await buttonEvent.click(navigationLinks[1]);
+    expect(getByTestId("navbar")).toHaveClass("collapse");
   });
 });
 
