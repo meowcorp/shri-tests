@@ -2,10 +2,10 @@
   "name": "autotests-hw-with-auto-check",
   "version": "1.0.0",
   "scripts": {
-    "start": "nodemon ./src/server/index.ts",
+    "start": "cross-env nodemon ./src/server/index.ts",
     "test:unit": "jest",
-    "test:e2e": "node_modules/.bin/hermione --require @babel/register",
-    "test:e2e:gui": "node_modules/.bin/hermione gui --require @babel/register",
+    "test:e2e": "npx hermione --require @babel/register",
+    "test:e2e:gui": "npx hermione gui --require @babel/register",
     "test": "npm run test:unit && npm run test:e2e",
     "build": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch"
@@ -51,6 +51,7 @@
     "@types/react-router-dom": "^5.3.1",
     "@types/webpack": "^5.28.0",
     "chai": "^4.3.7",
+    "cross-env": "^7.0.3",
     "css-loader": "^6.3.0",
     "html-reporter": "^9.9.2",
     "html-webpack-plugin": "^5.3.2",
