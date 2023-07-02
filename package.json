@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "cross-env nodemon ./src/server/index.ts",
-    "test:unit": "jest",
+    "test:unit": "cross-env jest",
     "test:e2e": "npx hermione --require @babel/register",
     "test:e2e:gui": "npx hermione gui --require @babel/register",
     "test": "npm run test:unit && npm run test:e2e",
