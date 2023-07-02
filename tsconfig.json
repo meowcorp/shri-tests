@@ -8,9 +8,10 @@
     "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
-    "types": ["node", "jest", "@testing-library/jest-dom"]
+    "types": ["node", "jest"]
   },
-  "include": ["src", "tests", "./jest-setup.ts"],
+  "include": ["src", "test", "./jest-setup.ts"],
+  "exclude": ["test/e2e"],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"

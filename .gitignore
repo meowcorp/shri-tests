@@ -25,3 +25,5 @@ html-report
 # Ignore all local history of files
 .history
 .ionide
+
+hermione-report
